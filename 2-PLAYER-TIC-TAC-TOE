@@ -1,0 +1,157 @@
+#
+# Requirements : 
+#
+# 1) Board : 
+#            display a board 3 * 3 to play the game, define a function for it
+#            
+#            and a list to store the data of assigned positions of the board
+
+# 2)play game :
+#            define a function to play the game.
+#
+#           It should decide whose turn is it to play the game
+#           then call a function :
+#                              which takes the input and assigns that place to corresponding player
+#            then check for WIN or TIE by calling corresponding functions
+#
+#            IF not win / TIE
+#
+#           go again            
+
+
+# To Store the data of the positions in the board
+board = ["-", "-", "-", 
+         "-", "-", "-", 
+         "-", "-", "-", ]
+
+
+# To check if any player had got a win
+def win():
+
+    # Checking ROW wise for player 1
+    R11 = bool(board[0] == "X" and board[1] == "X" and board[2] == "X")
+    R12 = bool(board[3] == "X" and board[4] == "X" and board[5] == "X")
+    R13 = bool(board[6] == "X" and board[7] == "X" and board[8] == "X")
+
+    # Checking ROW wise for player 2
+    R21 = bool(board[0] == "O" and board[1] == "O" and board[2] == "O")
+    R22 = bool(board[3] == "O" and board[4] == "O" and board[5] == "O")
+    R23 = bool(board[6] == "O" and board[7] == "O" and board[8] == "O")
+
+    # Checking COLUMN wise for player 1
+    C11 = bool(board[0] == "X" and board[3] == "X" and board[6] == "X")
+    C12 = bool(board[1] == "X" and board[4] == "X" and board[7] == "X")
+    C13 = bool(board[2] == "X" and board[5] == "X" and board[8] == "X")
+
+    # Checking COLUMN wise for player 2
+    C21 = bool(board[0] == "O" and board[3] == "O" and board[6] == "O")
+    C22 = bool(board[1] == "O" and board[4] == "O" and board[7] == "O")
+    C23 = bool(board[2] == "O" and board[5] == "O" and board[8] == "O")
+
+    # Checking DIAGONAL wise for player 1
+    D11 = bool(board[0] == "X" and board[4] == "X" and board[8] == "X")
+    D12 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
+
+    # Checking DIAGONAL wise for player 2
+    D21 = bool(board[0] == "X" and board[4] == "X" and board[8] == "X")
+    D22 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
+
+    if R11 or R12 or R13 or C11 or C12 or C13 or D11 or D12 :
+        return 1 # Win for player 1
+    elif R21 or R22 or R23 or C21 or C22 or C23 or D21 or D22 :
+        return 2 # win for player 2
+    else :
+        return 0 # no one had won yet
+
+# To check if the game had reached a tie 
+def Tie(W):
+
+    if W != 0: # Making sure no one has won yet before checking for tie
+        return 0
+
+    for i in [0,1,2,3,4,5,6,7,8]:  # For loop to check if all the places are filled or not
+        if board[i] == "X":
+            i = i+1
+        elif board[i] == "O":
+            i = i+1
+        else:
+            return 0   # Return T=0, because there are still empty places
+    
+    return 1 # Return TIE beacuse all the places are filled and no one won
+        
+def display_board():
+    print(" | " + board[0] + " | " + board[1] + " | " + board[2] + " | ")
+    print(" | " + board[3] + " | " + board[4] + " | " + board[5] + " | ")
+    print(" | " + board[6] + " | " + board[7] + " | " + board[8] + " | ")
+
+
+def player_input(p):
+
+    # input function : to take the corresponding player input and display in the board
+
+
+    print(f'player {p}')
+    position = input("choose a postion from available positions : ")
+    position = int(position) - 1
+
+
+    if board[position] == "X" or board[position] == "O":
+
+
+        if (board[position] == "X" and p == 2) or (board[position] == "O" and p == 1) :
+
+            print(f'The place is choosen by another player already, so please...')
+            player_input(p)
+
+
+
+        else:
+
+            print(f'The place is choosen by player you already, so please...')
+            player_input(p)
+
+
+    else:
+
+        if p == 1:
+            board[position] = "X"
+            display_board()
+        
+        else:
+            board[position] = "O"
+            display_board()
+    
+
+def play_game():
+    # display the board in current position
+    display_board()
+    T = 0
+    W = 0
+    p = 1
+    for i in [0,1,2,3,4,5,6,7,8,9] :   # For loop to change the player turn and to check win or tie at each input 
+        if i%2 == 0:
+            p = 1
+            player_input(p)
+            W = win()
+            T = Tie(W)
+        else:
+            p = 2
+            player_input(p)
+            W = win()
+            T = Tie(W)
+        
+        if W == 1:
+            print("PLAYER 1 HAS WON ")
+            return
+        elif W == 2:
+            print("PLAYER 2 HAS WON")
+            return
+        elif T == 1:
+            print("GAME OVER")
+            return
+        else:
+            i = i+1
+            
+
+if __name__=="__main__":
+    play_game()
