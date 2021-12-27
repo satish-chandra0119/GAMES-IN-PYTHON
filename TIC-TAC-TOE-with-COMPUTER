@@ -1,2 +1,186 @@
-....
-Let's play with computer
+import random
+
+board = ["-", "-", "-", 
+         "-", "-", "-", 
+         "-", "-", "-", ]
+
+def win():
+
+
+    R11 = bool(board[0] == "X" and board[1] == "X" and board[2] == "X")
+    R12 = bool(board[3] == "X" and board[4] == "X" and board[5] == "X")
+    R13 = bool(board[6] == "X" and board[7] == "X" and board[8] == "X")
+
+
+    R21 = bool(board[0] == "O" and board[1] == "O" and board[2] == "O")
+    R22 = bool(board[3] == "O" and board[4] == "O" and board[5] == "O")
+    R23 = bool(board[6] == "O" and board[7] == "O" and board[8] == "O")
+
+  
+    C11 = bool(board[0] == "X" and board[3] == "X" and board[6] == "X")
+    C12 = bool(board[1] == "X" and board[4] == "X" and board[7] == "X")
+    C13 = bool(board[2] == "X" and board[5] == "X" and board[8] == "X")
+
+   
+    C21 = bool(board[0] == "O" and board[3] == "O" and board[6] == "O")
+    C22 = bool(board[1] == "O" and board[4] == "O" and board[7] == "O")
+    C23 = bool(board[2] == "O" and board[5] == "O" and board[8] == "O")
+
+   
+    D11 = bool(board[0] == "X" and board[4] == "X" and board[8] == "X")
+    D12 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
+
+    
+    D21 = bool(board[0] == "O" and board[4] == "O" and board[8] == "O")
+    D22 = bool(board[2] == "O" and board[4] == "O" and board[6] == "O")
+
+    if R11 or R12 or R13 or C11 or C12 or C13 or D11 or D12 :
+        return 1 
+    elif R21 or R22 or R23 or C21 or C22 or C23 or D21 or D22 :
+        return 2 
+    else :
+        return 0 
+
+def Tie(W):
+
+    if W != 0: 
+        return 0
+
+    for i in range(9): 
+        if board[i] == "X":
+            i = i+1
+        elif board[i] == "O":
+            i = i+1
+        else:
+            return 0 
+    
+    return 1 
+        
+def display_board():
+    print(" | " + board[0] + " | " + board[1] + " | " + board[2] + " | ")
+    print(" | " + board[3] + " | " + board[4] + " | " + board[5] + " | ")
+    print(" | " + board[6] + " | " + board[7] + " | " + board[8] + " | ")
+
+def player_input(Cm,p):
+    
+    if Cm == 10:
+        position = input("choose Your option from available positions : ")
+        position = int(position) - 1
+    else:
+        position = Cm
+
+
+    if board[position] == "X" or board[position] == "O":
+        print(f'The position is already occupied so please...')
+        player_input(10,p)
+
+
+    else:
+
+        if p == 1:
+            board[position] = "X"
+            display_board()
+        
+        else:
+            board[position] = "O"
+            display_board()
+
+def play_game():
+
+    print("How would you like to play?   PLAYER 1  or PLAYER 2 ")
+    print("to play as a first payer enter 1 :")
+    print("to play as 2nd player enter 2 :")
+    PLAYER = int(input("please enter your choice : "))
+    if PLAYER == 1:
+        COMPUTER = 2
+    elif PLAYER == 2:
+        COMPUTER = 1
+    else :
+        print("Please choose 1 or 2 only.... there are only 2 positions available  ")
+        print("START AGAIN TO PLAY AND CHOOSE THE CORRECT OPTION")
+        return
+
+    display_board()
+    T = 0
+    W = 0
+    for i in range(9) :
+        if i%2 == 0:
+            p = 1
+        else:
+            p = 2
+        
+        if p == COMPUTER:
+            print("-----------------")
+            print("--COMPUTER MOVE--")
+            Cm = COMPUTER_Move(p)
+            player_input(Cm,p)
+        else :
+            print("-----------------")
+            print("--YOUR MOVE--")
+            player_input(10,p)
+           
+        W = win()
+        T = Tie(W)
+        if W == 1:
+            if W == COMPUTER:
+                print("COMPUTER HAS WON ")
+            else:
+                print("YOU WON")
+            return
+        elif W == 2:
+            if W == COMPUTER:
+                print("COMPUTER HAS WON ")
+            else:
+                print("YOU WON")
+            return
+
+        elif T == 1:
+            print("GAME OVER - ITs a TIE")
+            return
+        else:
+            i = i+1
+
+def COMPUTER_Move(p):
+    available_slots = [0,1,2,3,4,5,6,7,8]
+    for i in range(9): 
+        if board[i] != "-":
+            available_slots.remove(i)
+            
+    if  len(available_slots) == 9:
+        return random.randint(0,9)
+    
+    Score = [0] * len(available_slots)
+
+    for i in range(len(available_slots)):
+        available_slots_backup = available_slots
+        a = available_slots[i]
+        if p == 1:
+            board[a] = "X"
+        else:
+            board[a] = "O"
+        W = win()
+        if W == p:
+            board[a] = "-"
+            return a   
+        else :
+            available_slots_backup.remove(a)
+            for j in range(0,len(available_slots_backup)):
+                b = available_slots_backup[j]
+                if p == 1:
+                    board[b] = "O"
+                else:
+                    board[b] = "X"  
+                W = win()
+                if W != 0:
+                    Score[i] = 1
+                board[b] = "-"
+            board[a] = "-"
+            available_slots_backup.insert(i,a) 
+    for i in range(len(Score)):
+        if Score[i] != 1:
+            return available_slots[i]
+    
+    return random.choice(available_slots)
+
+if __name__=="__main__":
+    play_game()
