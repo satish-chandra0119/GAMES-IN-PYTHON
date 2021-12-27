@@ -88,8 +88,6 @@ def player_input(Cm,p):
 def play_game():
 
     print("How would you like to play?   PLAYER 1  or PLAYER 2 ")
-    print("to play as a first payer enter 1 :")
-    print("to play as 2nd player enter 2 :")
     PLAYER = int(input("please enter your choice : "))
     if PLAYER == 1:
         COMPUTER = 2
