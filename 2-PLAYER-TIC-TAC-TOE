@@ -53,8 +53,8 @@ def win():
     D12 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
 
     # Checking DIAGONAL wise for player 2
-    D21 = bool(board[0] == "X" and board[4] == "X" and board[8] == "X")
-    D22 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
+    D21 = bool(board[0] == "O" and board[4] == "O" and board[8] == "O")
+    D22 = bool(board[2] == "O" and board[4] == "O" and board[6] == "O")
 
     if R11 or R12 or R13 or C11 or C12 or C13 or D11 or D12 :
         return 1 # Win for player 1
