@@ -6,40 +6,42 @@ board = ["-", "-", "-",
 
 def win():
 
-
+    # Checking ROW wise for player 1
     R11 = bool(board[0] == "X" and board[1] == "X" and board[2] == "X")
     R12 = bool(board[3] == "X" and board[4] == "X" and board[5] == "X")
     R13 = bool(board[6] == "X" and board[7] == "X" and board[8] == "X")
 
-
+    # Checking ROW wise for player 2
     R21 = bool(board[0] == "O" and board[1] == "O" and board[2] == "O")
     R22 = bool(board[3] == "O" and board[4] == "O" and board[5] == "O")
     R23 = bool(board[6] == "O" and board[7] == "O" and board[8] == "O")
 
-  
+    # Checking COLUMN wise for player 1
     C11 = bool(board[0] == "X" and board[3] == "X" and board[6] == "X")
     C12 = bool(board[1] == "X" and board[4] == "X" and board[7] == "X")
     C13 = bool(board[2] == "X" and board[5] == "X" and board[8] == "X")
 
-   
+    # Checking COLUMN wise for player 2
     C21 = bool(board[0] == "O" and board[3] == "O" and board[6] == "O")
     C22 = bool(board[1] == "O" and board[4] == "O" and board[7] == "O")
     C23 = bool(board[2] == "O" and board[5] == "O" and board[8] == "O")
 
-   
+    # Checking DIAGONAL wise for player 1
     D11 = bool(board[0] == "X" and board[4] == "X" and board[8] == "X")
     D12 = bool(board[2] == "X" and board[4] == "X" and board[6] == "X")
 
-    
+    # Checking DIAGONAL wise for player 2
     D21 = bool(board[0] == "O" and board[4] == "O" and board[8] == "O")
     D22 = bool(board[2] == "O" and board[4] == "O" and board[6] == "O")
 
     if R11 or R12 or R13 or C11 or C12 or C13 or D11 or D12 :
-        return 1 
+        return 1 # Win for player 1
     elif R21 or R22 or R23 or C21 or C22 or C23 or D21 or D22 :
-        return 2 
+        return 2 # win for player 2
     else :
-        return 0 
+        return 0 # no one had won yet
+
+
 
 def Tie(W):
 
@@ -88,6 +90,8 @@ def player_input(Cm,p):
 def play_game():
 
     print("How would you like to play?   PLAYER 1  or PLAYER 2 ")
+    print("to play as a first payer enter 1 :")
+    print("to play as 2nd player enter 2 :")
     PLAYER = int(input("please enter your choice : "))
     if PLAYER == 1:
         COMPUTER = 2
@@ -143,12 +147,18 @@ def COMPUTER_Move(p):
     for i in range(9): 
         if board[i] != "-":
             available_slots.remove(i)
-            
-    if  len(available_slots) == 9:
-        return random.randint(0,9)
+    
+    if p == 1 and len(available_slots) == 9 :
+
+        return random.choice([0,2,4,6,8])
+    
+    if p == 2 and len(available_slots) == 8:
+        for i in range(8):
+            if available_slots[i] == 4:
+                return 4
+        return random.choice([0,2,6,8])
     
     Score = [0] * len(available_slots)
-
     for i in range(len(available_slots)):
         available_slots_backup = available_slots
         a = available_slots[i]
@@ -156,8 +166,8 @@ def COMPUTER_Move(p):
             board[a] = "X"
         else:
             board[a] = "O"
-        W = win()
-        if W == p:
+        W1 = win()
+        if W1 == p:
             board[a] = "-"
             return a   
         else :
@@ -168,15 +178,56 @@ def COMPUTER_Move(p):
                     board[b] = "O"
                 else:
                     board[b] = "X"  
-                W = win()
-                if W != 0:
+                W2 = win()
+                if W2 != 0:
                     Score[i] = 1
                 board[b] = "-"
             board[a] = "-"
             available_slots_backup.insert(i,a) 
-    for i in range(len(Score)):
-        if Score[i] != 1:
-            return available_slots[i]
+    
+    if max(Score) >= 1:
+        for i in range(len(Score)):
+            if Score[i] != 1:
+                return available_slots[i]
+    
+    
+    
+    Score = [0] * len(available_slots)
+    for i in range(len(available_slots)):
+        available_slots_backup = available_slots
+        a = available_slots[i]
+        if p == 1:
+            board[a] = "X"
+        else:
+            board[a] = "O"
+        W1 = win()
+        if W1 == p:
+            board[a] = "-"
+            return a   
+        else :
+            available_slots_backup.remove(a)
+            for j in range(0,len(available_slots_backup)):
+                b = available_slots_backup[j]
+                if p == 1:
+                    board[b] = "X"
+                else:
+                    board[b] = "O"  
+                W2 = win()
+                if W2 == p:
+                    Score[i] += 1
+                board[b] = "-"
+            board[a] = "-"
+            available_slots_backup.insert(i,a)
+
+    if max(Score) >= 2:
+        for i in range(len(Score)):
+            if Score[i] >= 2:
+                return available_slots[i]
+    if max(Score) == 1:
+        for i in range(len(Score)):
+            if Score[i] == 1:
+                return available_slots[i]
+
     
     return random.choice(available_slots)
 
