@@ -130,16 +130,14 @@ def play_game():
     p = 1
     for i in [0,1,2,3,4,5,6,7,8,9] :   # For loop to change the player turn and to check win or tie at each input 
         if i%2 == 0:
-            p = 1
-            player_input(p)
-            W = win()
-            T = Tie(W)
+            p = 1  
         else:
             p = 2
-            player_input(p)
-            W = win()
-            T = Tie(W)
         
+        player_input(p)
+
+        W = win()
+        T = Tie(W)   
         if W == 1:
             print("PLAYER 1 HAS WON ")
             return
